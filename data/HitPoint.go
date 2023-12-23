@@ -7,7 +7,7 @@ import (
 
 type HitPoint struct {
 	gorm.Model
-	UUID      string `gorm:"type:uuid;primaryKey;<-:create"`
+	UUID      string `gorm:"type:varchar(100);primaryKey;<-:create"`
 	Name      string `gorm:"not null"`
 	ProjectID int
 	Project   Project

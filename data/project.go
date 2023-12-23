@@ -8,7 +8,7 @@ import (
 type Project struct {
 	gorm.Model
 	Name string `gorm:"not null"`
-	UUID string `gorm:"type:uuid;primaryKey;<-:create"`
+	UUID string `gorm:"type:varchar(100);primaryKey;"`
 }
 
 func (proj *Project) BeforeCreate(tx *gorm.DB) error {

@@ -7,9 +7,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Name         string `gorm:"not null"`
-	Email        string `gorm:"not null"`
-	PasswordHash string `gorm:"not null"`
+	Name         string `gorm:"type:varchar(255);not null"`
+	Email        string `gorm:"type:varchar(500);not null;unique"`
+	PasswordHash string `gorm:"type:varchar(255);not null"`
 }
 
 func (user *User) SetPassword(tx *gorm.DB, password string) (err error) {
