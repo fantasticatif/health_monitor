@@ -40,6 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 	sharedDB = db
+	data.AutoMigrate(db)
 
 	router := gin.Default()
 	v1 := router.Group("/api/v1")
