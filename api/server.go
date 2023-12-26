@@ -3,17 +3,14 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
-	"os"
 	"strings"
 
-	"github.com/fantasticatif/health_monitor/data"
+	"github.com/fantasticatif/health_monitor/api/db"
+	"github.com/fantasticatif/health_monitor/api/shareddata"
+	"github.com/fantasticatif/health_monitor/api/userroute"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"gorm.io/gorm"
 )
-
-var sharedDB *gorm.DB
 
 func ping(ctx *gin.Context) {
 	// platform := ClientPlatform(ctx.Param("platform"))
@@ -41,19 +38,8 @@ func ping(ctx *gin.Context) {
 func main() {
 
 	godotenv.Load()
-
-	dbConfig := data.GormTCPConnectionConfig{
-		UserName: os.Getenv("HM_DB_USERNAME"),
-		Password: os.Getenv("HM_DB_PASSWORD"),
-		DBName:   os.Getenv("HM_DB_NAME"),
-		Host:     os.Getenv("HM_DB_HOST"),
-	}
-	db, err := dbConfig.OpenMySql()
-	if err != nil {
-		log.Fatal(err)
-	}
-	sharedDB = db
-	data.AutoMigrate(db)
+	shareddata.ResetEnvVariables()
+	db.SetupDb()
 
 	router := gin.Default()
 	v1 := router.Group("/api/v1")
@@ -62,5 +48,7 @@ func main() {
 	pingRoute.POST("/:uuid", ping)
 	pingRoute.GET("/:uuid/:flag", ping)
 	pingRoute.POST("/:uuid/:flag", ping)
+
+	userroute.SetupUserRoute(router)
 	router.Run()
 }
