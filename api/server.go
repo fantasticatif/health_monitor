@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/fantasticatif/health_monitor/api/db"
+	"github.com/fantasticatif/health_monitor/api/projectroute"
 	"github.com/fantasticatif/health_monitor/api/shareddata"
 	"github.com/fantasticatif/health_monitor/api/userroute"
 	"github.com/gin-gonic/gin"
@@ -50,5 +51,6 @@ func main() {
 	pingRoute.POST("/:uuid/:flag", ping)
 
 	userroute.SetupUserRoute(router)
+	projectroute.SetupProjectRoute(router)
 	router.Run()
 }
