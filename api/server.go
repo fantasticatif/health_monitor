@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/fantasticatif/health_monitor/api/db"
+	"github.com/fantasticatif/health_monitor/api/hitpointroute"
 	"github.com/fantasticatif/health_monitor/api/projectroute"
 	"github.com/fantasticatif/health_monitor/api/shareddata"
 	"github.com/fantasticatif/health_monitor/api/userroute"
@@ -52,5 +53,6 @@ func main() {
 
 	userroute.SetupUserRoute(router)
 	projectroute.SetupProjectRoute(router)
+	hitpointroute.SetupProjectRoute(router)
 	router.Run()
 }

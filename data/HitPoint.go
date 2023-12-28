@@ -7,14 +7,20 @@ import (
 
 type HitPoint struct {
 	gorm.Model
-	UUID      string `gorm:"type:varchar(100);primaryKey;<-:create"`
-	Name      string `gorm:"not null"`
-	ProjectID int
-	Project   Project
+	UUID        string `gorm:"type:varchar(100);primaryKey;<-:create"`
+	Name        string `gorm:"not null"` // add composite constraint
+	Description string `gorm:"type:text"`
+	ProjectID   uint
+	Project     Project
 }
 
-func (proj *HitPoint) BeforeCreate(tx *gorm.DB) error {
-	uuid := uuid.New()
-	proj.UUID = uuid.String()
+func (h *HitPoint) BeforeCreate(db *gorm.DB) error {
+	h.UUID = uuid.New().String()
 	return nil
+}
+
+func (h *HitPoint) Create(db *gorm.DB) error {
+	h.BeforeCreate(db)
+	tx := db.Create(h)
+	return tx.Error
 }
