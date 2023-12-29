@@ -105,7 +105,7 @@ func loginRequestHandler(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Login successful", "user": user})
 }
 
-func getUserById(c *gin.Context) {
+func getUser(c *gin.Context) {
 	user, exists := c.Get("user")
 	if !exists || user == nil {
 		c.JSON(401, gin.H{"error": "user not found"})
@@ -137,5 +137,5 @@ func SetupUserRoute(router *gin.Engine) {
 	ur.GET("/logout", logout)
 
 	auth_ur := router.Group(shareddata.Authenticated_api_route, middleware.AuthenticateMiddleware)
-	auth_ur.GET("/v1/user/id/:user_id", getUserById)
+	auth_ur.GET("/v1/user", getUser)
 }
