@@ -14,6 +14,7 @@ type User struct {
 	Name         string `gorm:"type:varchar(255);not null"`
 	Email        string `gorm:"type:varchar(500);not null;unique"`
 	PasswordHash string `gorm:"type:varchar(255);not null"`
+	IsVerified   bool   `gorm:"not null;"`
 	AccountID    uint   `gorm:"not null;"`
 	Account      Account
 }
