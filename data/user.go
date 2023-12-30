@@ -3,15 +3,19 @@ package data
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
+	UUID         string `gorm:"type:varchar(100);primaryKey;"`
 	Name         string `gorm:"type:varchar(255);not null"`
 	Email        string `gorm:"type:varchar(500);not null;unique"`
 	PasswordHash string `gorm:"type:varchar(255);not null"`
+	AccountID    uint   `gorm:"not null;"`
+	Account      Account
 }
 
 func (user *User) SetPassword(password string) (err error) {
@@ -25,6 +29,22 @@ func (user *User) SetPassword(password string) (err error) {
 
 func (user *User) VerifyPasswordMatch(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+}
+
+func (user *User) Create(db *gorm.DB, password string) error {
+	pass_len := len(password)
+	if pass_len < 6 {
+		return errors.New("Password must be at least 6 character long")
+	}
+	user.SetPassword(password)
+	user.UUID = uuid.New().String()
+	tx := db.Create(&user)
+
+	if tx.Error != nil {
+		return tx.Error
+	} else {
+		return nil
+	}
 }
 
 func UserById(db *gorm.DB, id int) (*User, error) {

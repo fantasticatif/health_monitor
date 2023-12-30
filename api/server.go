@@ -5,6 +5,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/fantasticatif/health_monitor/api/account"
 	"github.com/fantasticatif/health_monitor/api/db"
 	"github.com/fantasticatif/health_monitor/api/hitpointroute"
 	"github.com/fantasticatif/health_monitor/api/projectroute"
@@ -44,15 +45,10 @@ func main() {
 	db.SetupDb()
 
 	router := gin.Default()
-	v1 := router.Group("/api/v1")
-	pingRoute := v1.Group("/ping")
-	pingRoute.GET("/:uuid", ping)
-	pingRoute.POST("/:uuid", ping)
-	pingRoute.GET("/:uuid/:flag", ping)
-	pingRoute.POST("/:uuid/:flag", ping)
 
 	userroute.SetupUserRoute(router)
 	projectroute.SetupProjectRoute(router)
 	hitpointroute.SetupProjectRoute(router)
+	account.SetupUserRoute(router)
 	router.Run()
 }

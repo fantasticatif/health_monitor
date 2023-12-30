@@ -12,6 +12,8 @@ type HitPoint struct {
 	Description string `gorm:"type:text"`
 	ProjectID   uint
 	Project     Project
+	AccountID   uint `gorm:"not null;"`
+	Account     Account
 }
 
 func (h *HitPoint) BeforeCreate(db *gorm.DB) error {

@@ -9,4 +9,6 @@ type HitEvent struct {
 	FromIp     string `gorm:"type:varchar(15)"`
 	UserAgent  string `gorm:"type:varchar(200)"`
 	HttpMethod string `gorm:"type:varchar(10)"`
+	AccountID  uint   `gorm:"not null;"`
+	Account    Account
 }

@@ -53,12 +53,12 @@ func createUserRequestHandler(ctx *gin.Context) {
 	}
 
 	user := data.User{Name: name, Email: email}
-	user.SetPassword(password)
-	tx := db.SharedDB.Create(&user)
+	user.Create(db.SharedDB, password)
+	err = user.SetPassword(password)
 
-	if tx.Error != nil {
-		fmt.Println(tx.Error.Error())
-		response["error"] = tx.Error.Error()
+	if err != nil {
+		fmt.Println(err.Error())
+		response["error"] = err.Error()
 		response["message"] = "failed to create user"
 		ctx.JSON(400, response)
 	} else {
