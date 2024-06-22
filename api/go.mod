@@ -1,6 +1,6 @@
 module github.com/fantasticatif/health_monitor/api
 
-go 1.21.5
+go 1.22.1
 
 require (
 	github.com/fantasticatif/health_monitor/data v0.0.0-20231223142431-0959f82127e0

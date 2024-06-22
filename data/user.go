@@ -15,8 +15,8 @@ type User struct {
 	Email        string `gorm:"type:varchar(500);not null;unique"`
 	PasswordHash string `gorm:"type:varchar(255);not null"`
 	IsVerified   bool   `gorm:"not null;"`
-	AccountID    uint   `gorm:"not null;"`
-	Account      Account
+	// AccountID    uint   `gorm:"not null;"`
+	// Account      Account
 }
 
 func (user *User) SetPassword(password string) (err error) {
@@ -35,11 +35,11 @@ func (user *User) VerifyPasswordMatch(password string) error {
 func (user *User) Create(db *gorm.DB, password string) error {
 	pass_len := len(password)
 	if pass_len < 6 {
-		return errors.New("Password must be at least 6 character long")
+		return errors.New("password must be at least 6 character long")
 	}
 	user.SetPassword(password)
 	user.UUID = uuid.New().String()
-	tx := db.Create(&user)
+	tx := db.Create(user)
 
 	if tx.Error != nil {
 		return tx.Error
@@ -79,6 +79,9 @@ func AuthenticateUserByEmailPassword(db *gorm.DB, email string, password string)
 	if err != nil {
 		return nil, err
 	}
+	// user.SetPassword(password)
+	// db.Model(&User{}).Where("email = ?", email).Update("password_hash", user.PasswordHash)
+
 	err = user.VerifyPasswordMatch(password)
 	return user, err
 }

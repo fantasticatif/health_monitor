@@ -9,7 +9,6 @@ type Account struct {
 	gorm.Model
 	Name     string
 	UUID     string `gorm:"type:varchar(100);primaryKey;"`
-	Users    []User
 	Projects []Project
 }
 

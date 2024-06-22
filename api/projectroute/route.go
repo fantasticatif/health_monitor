@@ -9,6 +9,7 @@ import (
 	"github.com/fantasticatif/health_monitor/data"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
+	"gorm.io/gorm"
 )
 
 func getProjects(c *gin.Context) {
@@ -38,13 +39,25 @@ func createProject(c *gin.Context) {
 		})
 		return
 	}
-	p := data.Project{Name: projName}
+	accUUID := c.PostForm("accountUUID")
+	var accUser data.AccountUser
+	tx := db.SharedDB.Where("account_uuid", accUUID).Where("user_id", user.ID).First(&accUser)
+	if tx.Error == gorm.ErrRecordNotFound {
+		c.AbortWithStatusJSON(400, gin.H{
+			"error": "user not found in account",
+		})
+		return
+	}
+
+	p := data.Project{Name: projName, AccountID: accUser.AccountID}
 	err := p.CreateProject(user, db.SharedDB)
 	if err != nil {
 		if sqlErr := err.(*mysql.MySQLError); sqlErr != nil {
 			if sqlErr.Number == 1062 {
 				c.AbortWithStatusJSON(400, gin.H{
-					"error": "Project name already exist",
+					"error":        "Project name already exist",
+					"internal_err": sqlErr.Message,
+					"sql":          sqlErr.Error(),
 				})
 				return
 			}
